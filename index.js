@@ -1,11 +1,14 @@
 
 const express = require('express');
-const debug = require('debug')('app:startup')
-
+const home = require('./routes/home');
 
 
 const app = express()//get express object
 
+//
+app.use(express.json());
+app.use(express.urlencoded({extended: true}))
+app.use('', home)
 
 
 
