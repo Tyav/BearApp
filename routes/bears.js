@@ -24,14 +24,22 @@ router.get('/api/bear/:id', async (req, res) => {
   res.json(bear)
 })
 
-router.get('/api/bears/name/:name', async (req, res) => {
+//Getting bears by Bearname
+router.get('/api/bears/name/:bear_name', async (req, res) => {
   const bear = await Bear
-    .find({name: req.params.name})
-  if(!bear.length) return res.status(404).send(`There is no Bear with the name: ${req.params.name}`)
+    .find({name: req.params.bear_name})
+  if(!bear.length) return res.status(404).send(`There is no Bear with the name: ${req.params.bear_name}`)
   res.json(bear)
 })
 
-
+//Getting bears by colour
+router.get('/api/bears/colour/:bear_colour', async (req, res) => {
+  const colours = req.params.bear_colour.split('&')
+  const bear = await Bear
+    .find({colour: {$in : colours}})
+  if(!bear.length) return res.status(404).send(`There is no Bear with the name: ${req.params.bear_colour}`)
+  res.json(bear)
+})
 
 
 
