@@ -3,7 +3,12 @@ const router = express.Router();
 const Bear = require('../models/bear');
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/bear', { useNewUrlParser: true }).then(() => console.log('Conneting to mongoDB')).catch((err) => console.log(err.message));
+//mongoose.connect('mongodb://localhost/bear', { useNewUrlParser: true }).then(() => console.log('Conneting to mongoDB')).catch((err) => console.log(err.message));
+mongoose
+	.connect('mongodb+srv://greenlad:8564@greenlad@cluster0-jonki.mongodb.net/test?retryWrites=true', { useNewUrlParser: true })
+	.then(() => console.log('Conneting to mongoDB'))
+	.catch((err) => console.log(err.message));
+
 //get verb for Bear
 router.get('/api/bears', async (req, res) => {
 	const bears = await Bear.find();
@@ -13,7 +18,7 @@ router.get('/api/bears', async (req, res) => {
 
 //GetByID verb for bears
 router.get('/api/bear/:id', async (req, res) => {
-	const bear = await Bear.find({ id: req.params.id });
+	const bear = await Bear.find({ _id: req.params.id });
 	if (!bear.length) return res.status(404).send(`There is no Bear with the ID: ${req.params.id}`);
 	res.json(bear);
 });
@@ -63,6 +68,23 @@ router.post('/api/bears/', async (req, res) => {
 	} catch (error) {
 		console.log(error.message);
 	}
+});
+
+//Updating bear
+router.put('/api/bear/:id', async (req, res) => {
+	const bearList = await Bear.find({ _id: req.params.id });
+	const bear = bearList[0];
+	if (!bearList.length) return res.status(404).send(`There is no Bear with the ID: ${req.params.id}`);
+	const result = await Bear.findByIdAndUpdate(req.params.id, {
+		$set: {
+			name: req.body.name || bear.name,
+			colour: req.body.colour || bear.colour,
+			location: req.body.location || bear.location,
+			documenter: req.body.documenter || bear.documenter,
+			date_edited: Date.now(),
+		},
+  }, {new: true});
+  res.send(result)
 });
 
 module.exports = router;
