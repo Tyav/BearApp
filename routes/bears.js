@@ -12,9 +12,16 @@ router.get('/api/bears', async (req, res) => {
   const bears = await Bear
   .find()
   .select('name colour location')
-  //   .sort({name: 1})
   
   res.send(bears)
+})
+
+//GetByID verb for bears
+router.get('/api/bears/:id', async(req, res) => {
+  const bears = await Bear
+    .find({id: req.params.id})
+  if(!bears.length) return res.status(404).send(`There is no Bear with the ID: ${req.params.id}`)
+  res.send(bears[0])
 })
 
 
