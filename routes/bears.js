@@ -87,4 +87,12 @@ router.put('/api/bear/:id', async (req, res) => {
   res.send(result)
 });
 
+//Deleting Bear
+router.delete('/api/bear/:id', async (req, res) => {
+  const deletedBear = await Bear.deleteOne({_id: req.params.id})
+  if(!deletedBear.deletedCount) return res.status(404).send(`There is no Bear with the ID: ${req.params.id}`);
+  res.send('Bear has been successfully deleted')
+})
+
+
 module.exports = router;
