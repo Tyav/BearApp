@@ -37,12 +37,19 @@ router.get('/api/bears/colour/:bear_colour', async (req, res) => {
   const colours = req.params.bear_colour.split('&')
   const bear = await Bear
     .find({colour: {$in : colours}})
-  if(!bear.length) return res.status(404).send(`There is no Bear with the name: ${req.params.bear_colour}`)
+  if(!bear.length) return res.status(404).send(`There is no Bear with the colour: ${req.params.bear_colour}`)
   res.json(bear)
 })
 
 
-
+//Getting bears by Location
+router.get('/api/bears/location/:bear_location', async (req, res) => {
+  const location = req.params.bear_location.split('&')
+  const bear = await Bear
+    .find({colour: {$in : location}})
+  if(!bear.length) return res.status(404).send(`There is no Bear within the location: ${req.params.bear_location}`)
+  res.json(bear)
+})
 
 
 module.exports = router
