@@ -11,20 +11,25 @@ router.get('/api/bears', async (req, res) => {
 
   const bears = await Bear
   .find()
-  .select('name colour location')
+  .select('name colour location documenter')
   
-  res.send(bears)
+  res.json(bears)
 })
 
 //GetByID verb for bears
-router.get('/api/bears/:id', async(req, res) => {
-  const bears = await Bear
+router.get('/api/bear/:id', async (req, res) => {
+  const bear = await Bear
     .find({id: req.params.id})
-  if(!bears.length) return res.status(404).send(`There is no Bear with the ID: ${req.params.id}`)
-  res.send(bears[0])
+  if(!bear.length) return res.status(404).send(`There is no Bear with the ID: ${req.params.id}`)
+  res.json(bear)
 })
 
-
+router.get('/api/bears/name/:name', async (req, res) => {
+  const bear = await Bear
+    .find({name: req.params.name})
+  if(!bear.length) return res.status(404).send(`There is no Bear with the name: ${req.params.name}`)
+  res.json(bear)
+})
 
 
 
