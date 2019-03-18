@@ -11,8 +11,7 @@ router.get('/api/bears', async (req, res) => {
 
   const bears = await Bear
   .find()
-  .select('name colour location documenter')
-  
+
   res.json(bears)
 })
 
@@ -50,6 +49,16 @@ router.get('/api/bears/location/:bear_location', async (req, res) => {
   if(!bear.length) return res.status(404).send(`There is no Bear within the location: ${req.params.bear_location}`)
   res.json(bear)
 })
+
+//Getting bears by documenter
+router.get('/api/bears/documenter/:bear_documenter', async (req, res) => {
+  const documenter = req.params.bear_documenter.split('&')
+  const bear = await Bear
+    .find({colour: {$in : documenter}})
+  if(!bear.length) return res.status(404).send(`No Bear has been documented by: ${req.params.bear_documenter}`)
+  res.json(bear)
+})
+
 
 
 module.exports = router
