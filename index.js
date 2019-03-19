@@ -1,6 +1,7 @@
 
 const express = require('express');
 const home = require('./routes/home');
+const bears = require('./routes/bears')
 
 
 const app = express()//get express object
@@ -8,7 +9,8 @@ const app = express()//get express object
 //
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
-app.use('', home)
+app.use('', home);
+app.use('/', bears)
 
 
 
