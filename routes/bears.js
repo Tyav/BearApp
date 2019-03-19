@@ -3,7 +3,7 @@ const router = express.Router();
 const Bear = require('../models/bear');
 const mongoose = require('mongoose');
 
-//mongoose.connect('mongodb://localhost/bear', { useNewUrlParser: true }).then(() => console.log('Conneting to mongoDB')).catch((err) => console.log(err.message));
+//mongoose.connect('mongodb://localhost/bear', { useNewUrlParser: true });
 mongoose
 	.connect('mongodb+srv://greenlad:8564@greenlad@cluster0-jonki.mongodb.net/test?retryWrites=true', { useNewUrlParser: true })
 	.then(() => console.log('Conneting to mongoDB'))
@@ -75,24 +75,27 @@ router.put('/api/bear/:id', async (req, res) => {
 	const bearList = await Bear.find({ _id: req.params.id });
 	const bear = bearList[0];
 	if (!bearList.length) return res.status(404).send(`There is no Bear with the ID: ${req.params.id}`);
-	const result = await Bear.findByIdAndUpdate(req.params.id, {
-		$set: {
-			name: req.body.name || bear.name,
-			colour: req.body.colour || bear.colour,
-			location: req.body.location || bear.location,
-			documenter: req.body.documenter || bear.documenter,
-			date_edited: Date.now(),
+	const result = await Bear.findByIdAndUpdate(
+		req.params.id,
+		{
+			$set: {
+				name: req.body.name || bear.name,
+				colour: req.body.colour || bear.colour,
+				location: req.body.location || bear.location,
+				documenter: req.body.documenter || bear.documenter,
+				date_edited: Date.now(),
+			},
 		},
-  }, {new: true});
-  res.send(result)
+		{ new: true },
+	);
+	res.send(result);
 });
 
 //Deleting Bear
 router.delete('/api/bear/:id', async (req, res) => {
-  const deletedBear = await Bear.deleteOne({_id: req.params.id})
-  if(!deletedBear.deletedCount) return res.status(404).send(`There is no Bear with the ID: ${req.params.id}`);
-  res.send('Bear has been successfully deleted')
-})
-
+	const deletedBear = await Bear.deleteOne({ _id: req.params.id });
+	if (!deletedBear.deletedCount) return res.status(404).send(`There is no Bear with the ID: ${req.params.id}`);
+	res.send('Bear has been successfully deleted');
+});
 
 module.exports = router;
